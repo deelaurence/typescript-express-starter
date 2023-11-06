@@ -11,22 +11,34 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/user-auth")
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((err) => {
-    console.error("Error connecting to MongoDB:", err);
-  });
+
+
 
 // Use the authentication routes
 app.use("/api/auth", authRoutes);
 app.use("/api", dashboardRoutes);
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+
+async function connectToMongoDB() {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/user-auth');
+    console.log('Connected to MongoDB');
+    // Start your server or perform other actions that depend on the database connection.
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+  }
+}
+
+// Call the async function to connect to MongoDB
+(async () => {
+  await connectToMongoDB();
+  // Any code here will be executed after the database connection is established.
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+
+})();
+
+
 
 export default  app 

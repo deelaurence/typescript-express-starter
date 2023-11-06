@@ -3,8 +3,8 @@ import User, { UserDocument } from "../models/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import  dotenv from 'dotenv'
-import {Secret} from "jsonwebtoken"
 dotenv.config()
+import {Secret} from "jsonwebtoken"
 
 class AuthController {
   public async register(req: Request, res: Response): Promise<void> {
@@ -13,7 +13,7 @@ class AuthController {
 
       const existingUser = await User.findOne({ username });
       if (existingUser) {
-        res.status(400).json({ message: "User already exists" });
+        res.status(409).json({ message: "User already exists" });
         return;
       }
 
